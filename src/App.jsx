@@ -16,7 +16,7 @@ import SearchBar from './components/SearchBar'
 import { assets } from './assets/assest'
 const App = () => {
   return (
-    <div className={`px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] min-h-svh bg-cover bg-no-repeat`} style={{ backgroundImage: `url(${assets.Hero_Backgroundimage})` }}>
+    <div className="px-2 sm:px-[2vw] md:px-[3vw] lg:px-[4vw]">
      <ToastContainer/>
       <Navbar/>
       <SearchBar/>
