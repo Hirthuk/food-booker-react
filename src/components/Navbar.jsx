@@ -17,13 +17,12 @@ const Navbar = () => {
     <>
       <header className='flex flex-row items-center justify-between px-4 py-2 mt-10 border-b-2 border-white pb-4 relative'>
         {/* Logo */}
-        <NavLink to="/" className='cursor-pointer z-20'>
           <img 
-            className='w-24 h-24 md:w-32 md:h-32 rounded-md cursor-pointer shadow-md' 
+            className='w-24 h-24 md:w-32 md:h-32 rounded-md cursor-pointer shadow-md transition-all duration-200 hover:scale-105' 
             src={assets.Logo} 
             alt="Website Logo" 
           />
-        </NavLink>
+
 
         {/* Desktop Navigation Links */}
         <nav className='hidden lg:flex flex-row items-center gap-6 lg:gap-8 mx-4 flex-1 justify-center'>
@@ -82,9 +81,19 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-80 z-20 lg:hidden flex flex-col" onClick={() => setMobileMenuOpen(false)}>
             <div
-              className="flex flex-col justify-center items-center h-full w-full bg-white"
+              className="flex flex-col justify-center items-center h-full w-full bg-white relative"
               onClick={e => e.stopPropagation()}
             >
+              {/* X mark to close mobile menu */}
+              <button
+                className="absolute top-4 right-6 text-3xl text-gray-700 hover:text-black transition z-30"
+                aria-label="Close menu"
+                onClick={() => setMobileMenuOpen(false)}
+                tabIndex={0}
+                type="button"
+              >
+                &#10005;
+              </button>
               {navLinks.map(link => (
                 <NavLink
                   key={link.to}
