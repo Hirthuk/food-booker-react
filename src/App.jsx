@@ -13,6 +13,7 @@ import {
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
+import PageNotFound from './components/pagenotfound'
 import { assets } from './assets/assest'
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path='favourites' element= {<Favourites/>}/>
         <Route path='contact' element= {<Contact/>}/>
         <Route path='trending' element= {<Trending/>}/>
+        <Route path="*" element={<PageNotFound/>} />
       </Routes>
       <Footer/>
     </div>
