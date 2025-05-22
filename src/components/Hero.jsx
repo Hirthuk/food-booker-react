@@ -40,17 +40,17 @@ const Hero = () => {
       <section className="w-full min-h-[80vh] flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-100 px-4 py-8">
         {/* Left: Heading, subtitle, CTA */}
         <div className=" w-full lg:w-1/2 flex flex-col items-start justify-center mb-8 lg:mb-0">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 md:ml-8">
             Discover Best Food Near You
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-6 hidden md:block">
+          <p className="text-lg md:text-xl text-gray-700 mb-6 hidden md:block md:ml-8">
             Order your favorite meals from our vendors. Fast delivery, fresh food, and satisfaction guaranteed.
           </p>
           <NavLink
           to={"/items"}
           className="flex items-center justify-center">
             <button
-            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors border-white"
+            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors border-white flex text-center items-center md:ml-8"
             aria-label="Order Now"
           >
             Order Now
