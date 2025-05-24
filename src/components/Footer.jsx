@@ -10,7 +10,7 @@ const Footer = () => {
     {src: assets.twitter, alt: "twitter", URL: "https://x.com/Sharankuma61629"}
   ]
   return (
-    <footer className="w-full bg-gradient-to-tr from-orange-400 via-rose-400 to-yellow-400 text-white py-8 px-4 mt-10 shadow-inner">
+    <footer className="w-full bg-gradient-to-tr from-orange-400 via-rose-400 to-yellow-400 text-white py-8 px-4 mt-10 shadow-inner rounded-lg">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Social Icons */}
         <div className="flex flex-row items-center justify-center gap-5 md:gap-7">

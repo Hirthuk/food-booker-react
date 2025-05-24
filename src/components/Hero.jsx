@@ -3,6 +3,7 @@ import { assets } from "../assets/assest";
 import { NavLink } from "react-router-dom";
 
 // Carousel images (replace with your own if desired)
+
 const images = [
   { src: assets.image1, alt: "Delicious food 1" },
   { src: assets.image2, alt: "Delicious food 2" },
@@ -31,13 +32,13 @@ const Hero = () => {
   const goTo = (idx) => setCurrent(idx);
   const prev = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
   const next = () => setCurrent((prev) => (prev + 1) % images.length);
-
+  
   return (
     <header
-      className='flex flex-col items-center justify-center h-screen bg-cover bg-center relative -mt-7'
+      className='flex flex-col items-center justify-center h-screen bg-cover bg-center relative -mt-7 bg-white'
     >
       {/* You can add hero content here */}
-      <section className="w-full min-h-[80vh] flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-100 px-4 py-8">
+      <section className="w-full min-h-[80vh] flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-100 px-4 py-8 shadow-lg rounded-lg">
         {/* Left: Heading, subtitle, CTA */}
         <div className=" w-full lg:w-1/2 flex flex-col items-start justify-center mb-8 lg:mb-0">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 md:ml-8">

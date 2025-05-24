@@ -15,7 +15,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className='flex flex-row items-center justify-between px-4 py-2 mt-10 border-b-2 border-white pb-4 relative'>
+      <header className='flex flex-row items-center justify-between px-4  pt-8 border-b-2 border-white pb-4 relative mb-4'>
         {/* Logo */}
           <img 
             className='w-24 h-24 md:w-32 md:h-32 rounded-md cursor-pointer shadow-md transition-all duration-200 hover:scale-105' 

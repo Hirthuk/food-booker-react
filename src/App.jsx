@@ -17,7 +17,7 @@ import PageNotFound from './components/pagenotfound'
 import { assets } from './assets/assest'
 const App = () => {
   return (
-    <div className="px-2 sm:px-[2vw] md:px-[3vw] lg:px-[4vw]">
+    <div className="px-2 sm:px-[2vw] md:px-[3vw] lg:px-[4vw]  mt-0">
      <ToastContainer/>
       <Navbar/>
       <SearchBar/>
