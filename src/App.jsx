@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import PageNotFound from './components/pagenotfound'
 import { assets } from './assets/assest'
+import ShopItem from './pages/ShopItem'
 const App = () => {
   return (
     <div className="px-2 sm:px-[2vw] md:px-[3vw] lg:px-[4vw]  mt-0">
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='favourites' element= {<Favourites/>}/>
         <Route path='contact' element= {<Contact/>}/>
         <Route path='trending' element= {<Trending/>}/>
+        <Route path='shop/:id' element={<ShopItem/>}/>
         <Route path="*" element={<PageNotFound/>} />
       </Routes>
       <Footer/>

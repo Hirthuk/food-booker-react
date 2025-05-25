@@ -17,11 +17,16 @@ const Navbar = () => {
     <>
       <header className='flex flex-row items-center justify-between px-4  pt-8 border-b-2 border-white pb-4 relative mb-4'>
         {/* Logo */}
-          <img 
+          <NavLink
+          key = {navLinks[0]}
+          to="/"
+          >
+            <img 
             className='w-24 h-24 md:w-32 md:h-32 rounded-md cursor-pointer shadow-md transition-all duration-200 hover:scale-105' 
             src={assets.Logo} 
             alt="Website Logo" 
           />
+          </NavLink>
 
 
         {/* Desktop Navigation Links */}
