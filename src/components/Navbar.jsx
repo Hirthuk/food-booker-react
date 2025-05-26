@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assest'
 import { NavLink } from 'react-router-dom'
+import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
   const [searchBar, setSearchBar] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {searchWord, setSearchWord} = useContext(ShopContext);
 
+  
   const navLinks = [
     { to: '/', label: 'Home' },
     { to: '/favourites', label: 'FAVOURITES' },
@@ -50,7 +53,10 @@ const Navbar = () => {
         {/* Right side elements (profile, hamburger, search icon) */}
         <div className='flex items-center gap-4 z-20'>
           {/* Search icon */}
-          <button 
+         <NavLink
+         to='/items'
+         >
+           <button 
             onClick={() => setSearchBar(true)}
             className='p-1 hover:bg-gray-100 hover:bg-opacity-20 rounded-full'
           >
@@ -60,6 +66,7 @@ const Navbar = () => {
               alt="Search" 
             />
           </button>
+         </NavLink>
           
           {/* Profile icon */}
           <NavLink to='/profile' className='p-1 hover:bg-gray-100 hover:bg-opacity-20 rounded-full'>
@@ -125,6 +132,8 @@ const Navbar = () => {
         <div className="flex justify-center w-full bg-white border-b border-gray-200 py-4">
           <div className="relative flex items-center w-full max-w-lg px-4">
             <input
+              onChange={e => setSearchWord(e.target.value)}
+              value={searchWord}
               className="outline-none bg-gray-100 w-full text-black rounded-md py-2 pl-4 pr-10 shadow"
               type="text"
               placeholder="Search..."
@@ -132,7 +141,10 @@ const Navbar = () => {
             />
             <button
               className="absolute right-6 text-gray-500 hover:text-black text-xl"
-              onClick={() => setSearchBar(false)}
+              onClick={() => {
+                setSearchBar(false);
+                setSearchWord('');
+              }}
               aria-label="Close search"
               tabIndex={0}
               type="button"

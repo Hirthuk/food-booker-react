@@ -10,6 +10,8 @@ import whatsapp from './whatsapp_icon.png'
 import twitter from './twitter_icon.png'
 import linkedin from './linkedin_icon.png'
 import PageNotFound from './pagenotfound.jpg'
+import star_white from './star_white.png'
+import start_color from './star_colored.png'
 export const  assets=  {
     Logo,
     profile_icon,
@@ -22,5 +24,7 @@ export const  assets=  {
     whatsapp,
     twitter,
     linkedin,
-    PageNotFound
+    PageNotFound,
+    star_white,
+    start_color
 }

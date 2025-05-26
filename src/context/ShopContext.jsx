@@ -5,6 +5,7 @@ export const ShopContext = createContext();
 export const ShopProvider = ({ children }) => {
   const [shopOverview, setShopOverview] = useState([]);
   const [itemList, setItemList] = useState([]);
+  const [searchWord, setSearchWord] = useState('');
   const backendURL = import.meta.env.VITE_BACKEND_URL;
  
   const getItemList = async () => {
@@ -24,7 +25,9 @@ export const ShopProvider = ({ children }) => {
   const value = {
     shopOverview,
     setShopOverview,
-    itemList
+    itemList,
+    searchWord,
+    setSearchWord
   };
 
   return (
