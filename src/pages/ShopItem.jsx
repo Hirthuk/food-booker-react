@@ -12,7 +12,7 @@ const ShopItem = () => {
     ? itemList.filter(item => Number(item.shop_id) === Number(id))
     : []
   
-    console.log(itemList);
+    // console.log(itemList);
   // Show loading spinner only if itemList is undefined/null (not just empty)
   if (!Array.isArray(itemList)) {
     return (

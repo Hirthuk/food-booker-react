@@ -7,7 +7,8 @@ export const ShopProvider = ({ children }) => {
   const [itemList, setItemList] = useState([]);
   const [searchWord, setSearchWord] = useState('');
   const backendURL = import.meta.env.VITE_BACKEND_URL;
- 
+  const [token, setToken] = useState(false);
+  const [user,setUser] = useState({});
   const getItemList = async () => {
     try{
       let result = await axios.get(backendURL+'/api/shops/getShopItems');
@@ -27,7 +28,12 @@ export const ShopProvider = ({ children }) => {
     setShopOverview,
     itemList,
     searchWord,
-    setSearchWord
+    setSearchWord,
+    backendURL,
+    token,
+    setToken,
+    user,
+    setUser
   };
 
   return (

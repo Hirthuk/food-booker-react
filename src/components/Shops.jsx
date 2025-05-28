@@ -11,7 +11,7 @@ const Shops = () => {
     const fetchShops = async () => {
       try {
         const result = await axios.get(backendURL + '/api/shops/getShopoverview')
-        setShopOverview(result.data.result)
+        setShopOverview(result.data.result);
       } catch (error) {
         console.log(error.message)
       }
