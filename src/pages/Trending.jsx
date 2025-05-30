@@ -1,10 +1,80 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assest'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Trending = () => {
-  const { itemList } = useContext(ShopContext)
+  const { itemList, token, backendURL } = useContext(ShopContext)
   const [trendingItemIds, setTrendingItemIds] = useState([])
+  const [favorites, setFavorites] = useState(new Set())
+
+  // Fetch user's favorites
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!token) return
+      
+      try {
+        const response = await axios.get(`${backendURL}/api/favorites/user-favorites`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (response.data.success) {
+          const favoriteIds = new Set(response.data.favorites.map(fav => fav.item_id))
+          setFavorites(favoriteIds)
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error)
+      }
+    }
+
+    fetchFavorites()
+  }, [token, backendURL])
+
+  // Handle favorite toggle
+  const toggleFavorite = async (itemId) => {
+    if (!token) {
+      toast.error('Please login to add favorites')
+      return
+    }
+
+    try {
+      if (favorites.has(itemId)) {
+        // Remove from favorites
+        const response = await axios.delete(`${backendURL}/api/favorites/remove/${itemId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (response.data.success) {
+          setFavorites(prev => {
+            const newFavorites = new Set(prev)
+            newFavorites.delete(itemId)
+            return newFavorites
+          })
+          toast.success('Removed from favorites')
+        }
+      } else {
+        // Add to favorites
+        const response = await axios.post(`${backendURL}/api/favorites/add/${itemId}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (response.data.success) {
+          setFavorites(prev => new Set([...prev, itemId]))
+          toast.success('Added to favorites')
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error)
+      toast.error(error.response?.data?.message || 'Error updating favorites')
+    }
+  }
 
   // Generate 15 unique random item IDs from the loaded itemList
   useEffect(() => {
@@ -65,8 +135,19 @@ const Trending = () => {
               <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-orange-400">
                 Add to cart
               </button>
-              <button className="flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full p-2 transition">
-                <img src={assets.star_white} alt="star" className="w-6 h-6" />
+              <button 
+                onClick={() => toggleFavorite(item.item_id)}
+                className={`flex items-center justify-center rounded-full p-2 transition ${
+                  favorites.has(item.item_id) 
+                    ? 'bg-yellow-400 hover:bg-yellow-500' 
+                    : 'bg-white/20 hover:bg-white/40'
+                }`}
+              >
+                <img 
+                  src={favorites.has(item.item_id) ? assets.star_filled : assets.star_white} 
+                  alt="star" 
+                  className="w-6 h-6" 
+                />
               </button>
             </div>
           </div>

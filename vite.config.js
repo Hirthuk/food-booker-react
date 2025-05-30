@@ -9,5 +9,13 @@ export default defineConfig({
     hmr:{
       overlay: false
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['framer-motion'],
+  },
+  build: {
+    commonjsOptions: {
+      include: [/framer-motion/],
+    },
+  },
 })

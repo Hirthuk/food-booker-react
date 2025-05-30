@@ -1,14 +1,31 @@
 import React, { useRef, useState, useEffect } from "react";
 import { assets } from "../assets/assest";
 import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Carousel images (replace with your own if desired)
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: { duration: 0.5, staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  }
+};
 
 const images = [
-  { src: assets.image1, alt: "Delicious food 1" },
-  { src: assets.image2, alt: "Delicious food 2" },
-  { src: assets.image3, alt: "Delicious food 3" },
-  { src: assets.image4, alt: "Delicious food 4" },
+  { src: assets.image1, alt: "Delicious food 1", category: "Popular" },
+  { src: assets.image2, alt: "Delicious food 2", category: "Trending" },
+  { src: assets.image3, alt: "Delicious food 3", category: "New" },
+  { src: assets.image4, alt: "Delicious food 4", category: "Featured" },
 ];
 
 const Hero = () => {
@@ -21,7 +38,7 @@ const Hero = () => {
     if (!paused) {
       timeoutRef.current = setTimeout(() => {
         setCurrent((prev) => (prev + 1) % images.length);
-      }, 2000);
+      }, 3000); // Increased duration for better visibility
     }
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -30,84 +47,119 @@ const Hero = () => {
 
   // Manual navigation
   const goTo = (idx) => setCurrent(idx);
-  const prev = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
-  const next = () => setCurrent((prev) => (prev + 1) % images.length);
-  
-  return (
-    <header
-      className='flex flex-col items-center justify-center h-screen bg-cover bg-center relative -mt-7 bg-white'
-    >
-      {/* You can add hero content here */}
-      <section className="w-full min-h-[80vh] flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-100 px-4 py-8 shadow-lg rounded-lg">
-        {/* Left: Heading, subtitle, CTA */}
-        <div className=" w-full lg:w-1/2 flex flex-col items-start justify-center mb-8 lg:mb-0">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 md:ml-8">
-            Discover Best Food Near You
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-6 hidden md:block md:ml-8">
-            Order your favorite meals from our vendors. Fast delivery, fresh food, and satisfaction guaranteed.
-          </p>
-          <NavLink
-          to={"/items"}
-          className="flex items-center justify-center">
-            <button
-            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors border-white flex text-center items-center md:ml-8"
-            aria-label="Order Now"
-          >
-            Order Now
-          </button>
-          </NavLink>
-        </div>
 
-        {/* Right: Carousel */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center relative">
-          <div
-            className="relative w-full max-w-md aspect-[4/3] rounded-xl overflow-hidden shadow-xl bg-white"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
+  return (
+    <motion.header
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="min-h-[85vh] md:min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 relative overflow-hidden"
+    >
+      <section className="max-w-7xl mx-auto px-4 py-6 md:py-12 min-h-[85vh] md:min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center relative z-10 gap-8">
+        {/* Left Content */}
+        <motion.div 
+          className="w-full lg:w-1/2 space-y-4 md:space-y-6 text-center lg:text-left"
+          variants={itemVariants}
+        >
+          <motion.h1 
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
           >
-            <img
-              key={images[current].src}
-              src={images[current].src}
-              alt={images[current].alt}
-              loading="lazy"
-              className="w-full h-full object-cover transition-all duration-500"
-              draggable={false}
-            />
-            {/* Left arrow */}
-            <button
-              aria-label="Previous image"
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-orange-100 text-gray-700 rounded-full p-2 shadow transition"
-              onClick={prev}
-              tabIndex={0}
-            >
-              <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={2}><path d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            {/* Right arrow */}
-            <button
-              aria-label="Next image"
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-orange-100 text-gray-700 rounded-full p-2 shadow transition"
-              onClick={next}
-              tabIndex={0}
-            >
-              <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={2}><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            {/* Dots */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-400">
+              Delicious Food
+            </span>
+            <span className="block text-3xl sm:text-4xl md:text-5xl mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">
+              Delivered To You
+            </span>
+          </motion.h1>
+
+          <motion.p 
+            className="text-base md:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            Experience the best local cuisines from top-rated restaurants. 
+            <span className="hidden sm:inline"> Fast delivery, exclusive deals, and a taste you'll love.</span>
+          </motion.p>
+
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <NavLink to="/items" className="w-full sm:w-auto">
+              <motion.button
+                className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>Order Now</span>
+                <span className="text-xl">→</span>
+              </motion.button>
+            </NavLink>
+            <NavLink to="/trending" className="w-full sm:w-auto">
+              <motion.button 
+                className="w-full sm:w-auto bg-white text-orange-500 font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out border-2 border-orange-500 hover:bg-orange-50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View trending
+              </motion.button>
+            </NavLink>
+          </motion.div>
+        </motion.div>
+
+        {/* Right: Image Carousel */}
+        <motion.div 
+          className="w-full lg:w-1/2"
+          variants={itemVariants}
+        >
+          <div className="relative max-w-xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl overflow-hidden shadow-2xl bg-white"
+              >
+                <motion.img
+                  src={images[current].src}
+                  alt={images[current].alt}
+                  className="w-full h-[280px] sm:h-[400px] object-cover"
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <div className="absolute top-3 right-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm md:text-base font-semibold shadow-lg">
+                  {images[current].category}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation Dots */}
+            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 bg-white px-4 py-2 rounded-full shadow-lg">
               {images.map((_, idx) => (
                 <button
                   key={idx}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  className={`w-3 h-3 rounded-full border-2 ${current === idx ? "bg-orange-500 border-orange-500" : "bg-white border-gray-300"} transition`}
+                  className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 ${
+                    current === idx 
+                      ? "bg-gradient-to-r from-orange-500 to-pink-500 scale-125" 
+                      : "bg-gray-300"
+                  }`}
                   onClick={() => goTo(idx)}
-                  tabIndex={0}
                 />
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
-    </header>
+    </motion.header>
   );
 };
 
