@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-toastify'
 
 const Login = () => {
-  const {setToken, setUser} = useContext(ShopContext);
+  const {setToken, setUser, token} = useContext(ShopContext);
   const navigate = useNavigate();
   const {backendURL} = useContext(ShopContext);
   const [formData, setFormData] = useState({
@@ -14,42 +14,35 @@ const Login = () => {
   })
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const result = await axios.post(`${backendURL}/api/users/login`, formData, {
         headers: {
           "Content-Type": "application/json"
         }
-      })
+      });
 
       if (result.data.success) {
-        // First set the authentication data
-        await setToken(result.data.token)
-        await setUser(result.data.user)
+        // Store token and user data
+        setToken(result.data.token);
+        setUser(result.data.user);
         
-        // Then show success message
-        toast.success(`Welcome Back ${result.data.user.name}!`)
+        // Show success message
+        toast.success(`Welcome back ${result.data.user.name}!`);
         
         // Reset form
         setFormData({
           email: '',
           password: ''
-        })
+        });
         
-        // Finally navigate
-        setTimeout(() => {
-          navigate('/')
-        }, 1000)
+        // Navigate to home
+        navigate('/');
       }
     } catch (error) {
-      console.error('Login error:', error)
-      if (error.response) {
-        toast.error(error.response.data.message || 'Login failed')
-      } else if (error.request) {
-        toast.error('No response from server. Please try again.')
-      } else {
-        toast.error('Error during login. Please try again.')
-      }
+      console.error('Login error:', error);
+      const errorMessage = error.response?.data?.message || 'Login failed';
+      toast.error(errorMessage);
     }
   }
 

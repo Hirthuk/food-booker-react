@@ -37,6 +37,7 @@ const Footer = () => {
         {/* Contact Link */}
         <div className="flex flex-col items-center gap-2">
           <Link 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             to="/contact" 
             className="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
           >

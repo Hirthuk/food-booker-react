@@ -1,17 +1,27 @@
 import React, { useContext } from 'react'
 import Login from '../components/Login'
 import { ShopContext } from '../context/ShopContext'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Profile = () => {
-  const { token, user } = useContext(ShopContext)
+  const { token, user, logout } = useContext(ShopContext)
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    toast.success('Logged out successfully')
+    navigate('/login')
+  }
 
   if (token) {
     return (
       <main className="max-w-4xl mx-auto py-8 px-4">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header with user name */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-6">
+          <div className="bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-6 flex flex-row justify-between">
             <h1 className="text-3xl font-bold text-white">{user.name}'s Profile</h1>
+            <button className='px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm' onClick={() => handleLogout()}>Logout</button>
           </div>
 
           {/* Profile content */}

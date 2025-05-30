@@ -17,21 +17,13 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    // Password validation
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match!')
       return
     }
 
-    if (formData.password.length < 8) {
-      toast.error('Password must be at least 8 characters long!')
-      return
-    }
-
     try {
-      // Remove confirmPassword before sending to backend
       const { confirmPassword, ...signupData } = formData
-
       const result = await axios.post(
         `${backendURL}/api/users/registeruser`,
         signupData,
@@ -43,9 +35,10 @@ const Signup = () => {
       )
 
       if (result.data.success) {
-        // Store token from response
+        // Store token and user data
         setToken(result.data.token)
         setUser(result.data.user)
+        
         // Show success message
         toast.success(`Welcome ${result.data.user.name}!`)
         
@@ -57,22 +50,13 @@ const Signup = () => {
           confirmPassword: ''
         })
         
-        // Navigate to home page
+        // Navigate to home
         navigate('/')
       }
     } catch (error) {
-      // Handle different types of errors
-      if (error.response) {
-        // Server responded with error
-        toast.error(error.response.data.message || 'Registration failed')
-      } else if (error.request) {
-        // Request made but no response
-        toast.error('No response from server. Please try again.')
-      } else {
-        // Other errors
-        toast.error('Error during registration. Please try again.')
-      }
       console.error('Signup error:', error)
+      const errorMessage = error.response?.data?.message || 'Registration failed'
+      toast.error(errorMessage)
     }
   }
 
