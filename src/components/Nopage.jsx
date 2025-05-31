@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assest';
 
-const PageNotFound = () => {
+const Nopage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-100 via-orange-50 to-yellow-100 px-4 py-10">
       <img
@@ -36,4 +36,4 @@ const PageNotFound = () => {
   );
 };
 
-export default PageNotFound;
+export default Nopage;

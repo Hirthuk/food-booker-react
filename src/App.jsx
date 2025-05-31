@@ -13,7 +13,7 @@ import {
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
-import PageNotFound from './components/pagenotfound'
+import Nopage from './components/Nopage'
 import ShopItem from './pages/ShopItem'
 import Login from './components/Login'
 import Signup from './components/Signup'
@@ -35,7 +35,7 @@ const App = () => {
         <Route path='shop/:id' element={<ShopItem/>}/>
         <Route path='login' element = {<Login/>}/>
         <Route path='signup' element = {<Signup/>} />
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="*" element={<Nopage/>} />
         <Route path='profile' element = {<Profile/>} />
       </Routes>
       <Footer/>
