@@ -10,14 +10,14 @@ import {
     MyCart,
     Trending,
 } from './pages'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import SearchBar from './components/SearchBar'
-import Nopage from './components/Nopage'
-import ShopItem from './pages/ShopItem'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import Profile from './pages/Profile'
+import Navbar from './components/Navbar.jsx'
+import Footer from './components/Footer.jsx'
+import SearchBar from './components/SearchBar.jsx'
+import Nopage from './components/Nopage.jsx'
+import ShopItem from './pages/ShopItem.jsx'
+import Login from './components/Login.jsx'
+import Signup from './components/SignUp.jsx'
+import Profile from './pages/Profile.jsx'
 const App = () => {
   return (
     <div className="px-2 sm:px-[2vw] md:px-[3vw] lg:px-[4vw]  mt-0">
