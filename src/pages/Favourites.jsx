@@ -10,46 +10,62 @@ const Favourites = () => {
   const [favorites, setFavorites] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await axios.get(`${backendURL}/api/favorites`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        if (response.data.success) {
-          setFavorites(response.data.favorites)
-        }
-      } catch (error) {
-        console.error('Error fetching favorites:', error)
-        toast.error(error.response?.data?.message || 'Failed to load favorites')
-      } finally {
+  const fetchFavorites = async () => {
+    try {
+      const authToken = token || localStorage.getItem('token')
+      
+      if (!authToken) {
         setLoading(false)
+        return
       }
-    }
 
-    if (token) {
+      // Update endpoint to match backend route
+      const response = await axios.get(`${backendURL}/api/favorites`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+
+      console.log('API Response:', response.data) // Debug log
+
+      if (response.data.success) {
+        setFavorites(response.data.favorites)
+      }
+    } catch (error) {
+      console.error('Error details:', error.response?.data) // Debug log
+      toast.error('Failed to load favorites')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Add dependencies to useEffect
+  useEffect(() => {
+    if (token || localStorage.getItem('token')) {
       fetchFavorites()
+    } else {
+      setLoading(false)
     }
   }, [token, backendURL])
 
+  // Update removeFavorite function
   const removeFavorite = async (itemId) => {
     try {
+      const authToken = token || localStorage.getItem('token')
+      
       const response = await axios.delete(`${backendURL}/api/favorites/${itemId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authToken}`
         }
       })
 
       if (response.data.success) {
-        setFavorites(favorites.filter(item => item.item_id !== itemId))
-        toast.success(response.data.message)
+        setFavorites(prev => prev.filter(item => item.item_id !== itemId))
+        toast.success('Removed from favorites')
       }
     } catch (error) {
-      console.error('Error removing favorite:', error)
-      toast.error(error.response?.data?.message || 'Failed to remove from favorites')
+      console.error('Remove error details:', error.response?.data)
+      toast.error('Failed to remove from favorites')
     }
   }
 
