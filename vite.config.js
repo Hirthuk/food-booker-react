@@ -18,19 +18,17 @@ export default defineConfig({
       }
     }
   },
-  optimizeDeps: {
-    include: ['framer-motion'],
-  },
   build: {
     outDir: 'dist',
     sourcemap: true,
-    commonjsOptions: {
-      include: [/framer-motion/],
-    },
+    assetsDir: 'assets',
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'framer-motion'],
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          motion: ['framer-motion']
         }
       }
     }
