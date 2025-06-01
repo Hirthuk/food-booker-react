@@ -1,43 +1,45 @@
 import React, { useContext, useEffect } from 'react'
-import Login from '../components/Login'
 import { ShopContext } from '../context/ShopContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 const Profile = () => {
-  const { token, user, logout, setToken } = useContext(ShopContext)
+  const { token, user, logout, fetchUserProfile } = useContext(ShopContext)
   const navigate = useNavigate()
 
-  // Check for token in localStorage on component mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('token')
-    if (storedToken && !token) {
-      setToken(storedToken)
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    if (!storedToken) {
+      navigate('/login');
+      return;
     }
-  }, [])
+
+    if (!user || Object.keys(user).length === 0) {
+      // If no user data in context but token exists, fetch profile
+      fetchUserProfile();
+    }
+  }, []);
 
   const handleLogout = () => {
-    logout()
-    localStorage.removeItem('token')
-    toast.success('Logged out successfully')
-    navigate('/login')
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
+
+  if (!token) {
+    navigate('/login');
+    return null;
   }
 
-  // Check both context token and localStorage token
-  const isAuthenticated = token || localStorage.getItem('token')
-
-  if (!isAuthenticated) {
+  // Show loading state while fetching user data
+  if (!user || Object.keys(user).length === 0) {
     return (
-      <div className='bg-[#FFDCDC] rounded-md'>
-        <Login />
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    )
-  }
-
-  if (!user) {
-    return <div className="flex justify-center items-center h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
+    );
   }
 
   return (

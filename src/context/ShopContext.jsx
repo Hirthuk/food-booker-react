@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
+
 export const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
@@ -33,31 +34,56 @@ export const ShopProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Fetch user data when token changes
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (token) {
-        try {
-          const response = await axios.get(`${backendURL}/api/users/profile`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-          setUser(response.data.user)
-        } catch (error) {
-          console.error('Error fetching user data:', error)
-          if (error.response?.status === 401) {
-            // Token is invalid or expired
-            localStorage.removeItem('token')
-            setToken(null)
-            setUser(null)
-          }
-        }
+  // Create axios instance with base configuration
+  const api = axios.create({
+    baseURL: backendURL.replace(/\/+$/, ''), // Remove trailing slashes
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  // Add request interceptor to add token
+  api.interceptors.request.use(config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  // Fetch user profile data
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await api.get('/api/users/profile');
+      
+      if (response.data?.user) {
+        setUser(response.data.user);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      if (error.response?.status === 401) {
+        logout();
       }
     }
+  };
 
-    fetchUserData()
-  }, [token])
+  // Effect to fetch profile on mount and token change
+  useEffect(() => {
+    if (token) {
+      fetchUserProfile();
+    }
+  }, [token]);
+
+  const login = async (userData) => {
+    setToken(userData.token);
+    setUser(userData.user);
+    localStorage.setItem('token', userData.token);
+    localStorage.setItem('user', JSON.stringify(userData.user));
+  };
 
   const logout = () => {
     setToken(null);
@@ -91,7 +117,9 @@ export const ShopProvider = ({ children }) => {
     setToken,
     user,
     setUser,
-    logout
+    login,
+    logout,
+    fetchUserProfile
   };
 
   return (
