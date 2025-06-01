@@ -33,6 +33,32 @@ export const ShopProvider = ({ children }) => {
     }
   }, [user]);
 
+  // Fetch user data when token changes
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(`${backendURL}/api/users/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          setUser(response.data.user)
+        } catch (error) {
+          console.error('Error fetching user data:', error)
+          if (error.response?.status === 401) {
+            // Token is invalid or expired
+            localStorage.removeItem('token')
+            setToken(null)
+            setUser(null)
+          }
+        }
+      }
+    }
+
+    fetchUserData()
+  }, [token])
+
   const logout = () => {
     setToken(null);
     setUser({});
