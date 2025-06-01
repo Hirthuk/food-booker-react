@@ -17,7 +17,7 @@ const Profile = () => {
   if (token) {
     return (
       <main className="max-w-4xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="rounded-2xl shadow-xl overflow-hidden">
           {/* Header with user name */}
           <div className="bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-6 flex flex-row justify-between">
             <h1 className="text-3xl font-bold text-white">{user.name}'s Profile</h1>
