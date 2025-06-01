@@ -6,7 +6,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const icons = [
     {src: assets.instagram, alt: 'Instagram', URL: "https://www.instagram.com/sharan_13_09/"},
-    {src: assets.whatsapp, alt: "WhatsApp", URL: "tel:9030980684"},
+    {src: assets.whatsapp, alt: "WhatsApp", URL: "tel:6385642886"},
     {src: assets.linkedin, alt: "Linkedin", URL: "https://www.linkedin.com/in/sharankumar-p-g3/"},
     {src: assets.twitter, alt: "twitter", URL: "https://x.com/Sharankuma61629"}
   ]
