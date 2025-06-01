@@ -16,7 +16,7 @@ import SearchBar from './components/SearchBar.jsx'
 import NotFound from './components/NotFound.jsx'
 import ShopItem from './pages/ShopItem.jsx'
 import Login from './components/Login.jsx'
-import Signup from './components/Signup.jsx'
+import SignUp from './components/SignUp.jsx'
 import Profile from './pages/Profile.jsx'
 const App = () => {
   return (
@@ -34,7 +34,7 @@ const App = () => {
         <Route path='trending' element= {<Trending/>}/>
         <Route path='shop/:id' element={<ShopItem/>}/>
         <Route path='login' element = {<Login/>}/>
-        <Route path='signup' element = {<Signup/>} />
+        <Route path='signup' element = {<SignUp/>} />
         <Route path="*" element={<NotFound/>} />
         <Route path='profile' element = {<Profile/>} />
       </Routes>

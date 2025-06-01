@@ -4,7 +4,7 @@ import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const Signup = () => {
+const SignUp = () => {
   const navigate = useNavigate()
   const { setToken, backendURL, setUser } = useContext(ShopContext)
   const [formData, setFormData] = useState({
@@ -150,4 +150,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default SignUp
