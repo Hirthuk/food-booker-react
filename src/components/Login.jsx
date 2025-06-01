@@ -1,131 +1,88 @@
-import React, { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { ShopContext } from '../context/ShopContext'
-import { toast } from 'react-toastify'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const {setToken, setUser, token} = useContext(ShopContext);
-  const navigate = useNavigate();
-  const {backendURL} = useContext(ShopContext);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Remove double slash by using URL constructor
-        const baseURL = import.meta.env.VITE_BACKEND_URL;
-        const url = new URL('/api/users/login', baseURL).href;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         
-        const response = await axios.post(url, {
-            email,
-            password
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        });
+        try {
+            // Only send necessary data
+            const loginData = {
+                email: email.trim(),
+                password: password
+            };
 
-        if (response.data.success) {
-            // Handle successful login
-            setToken(response.data.token);
-            setUser(response.data.user);
-            
-            // Show success message
-            toast.success(`Welcome back ${response.data.user.name}!`);
-            
-            // Reset form
-            setFormData({
-              email: '',
-              password: ''
+            const url = new URL('/api/users/login', backendURL).href;
+            const response = await axios.post(url, loginData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
             });
-            
-            // Navigate to home
-            navigate('/');
+
+            if (response.data.success) {
+                localStorage.setItem('token', response.data.token);
+                toast.success('Login successful!');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Login error:', error?.response?.data?.message || error.message);
+            toast.error(error?.response?.data?.message || 'Login failed');
         }
-    } catch (error) {
-        console.error('Login error:', error);
-        toast.error(error.response?.data?.message || 'Login failed');
-    }
-  }
+    };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  return (
-    <div className='flex flex-col items-center justify-center min-h-[80vh] px-4'>
-      <div className='w-full max-w-md bg-white rounded-2xl shadow-xl p-8'>
-        <h2 className='text-3xl font-bold text-center mb-8 text-gray-800'>Welcome Back!</h2>
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          <div>
-            <label htmlFor='email' className='block text-sm font-medium text-gray-700 mb-2'>
-              Email Address
-            </label>
-            <input
-              type='email'
-              id='email'
-              name='email'
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'
-              placeholder='Enter your email'
-            />
-          </div>
-          <div>
-            <label htmlFor='password' className='block text-sm font-medium text-gray-700 mb-2'>
-              Password
-            </label>
-            <input
-              type='password'
-              id='password'
-              name='password'
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className='w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'
-              placeholder='Enter your password'
-            />
-          </div>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center'>
-              <input
-                type='checkbox'
-                id='remember'
-                className='h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
-              />
-              <label htmlFor='remember' className='ml-2 block text-sm text-gray-700'>
-                Remember me
-              </label>
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8">
+                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                    <input type="hidden" name="remember" value="true" />
+                    <div className="rounded-md shadow-sm -space-y-px">
+                        <div>
+                            <label htmlFor="email" className="sr-only">Email address</label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                placeholder="Email address"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password" className="sr-only">Password</label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                placeholder="Password"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <button
+                            type="submit"
+                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Sign in
+                        </button>
+                    </div>
+                </form>
             </div>
-            <Link to='/forgot-password' className='text-sm text-blue-600 hover:text-blue-800'>
-              Forgot password?
-            </Link>
-          </div>
-          <button
-            type='submit'
-            className='w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all font-medium'
-          >
-            Sign In
-          </button>
-        </form>
-        <p className='mt-6 text-center text-gray-600'>
-          Don't have an account?{' '}
-          <Link to='/signup' className='text-blue-600 hover:text-blue-800 font-medium'>
-            Sign up
-          </Link>
-        </p>
-      </div>
-    </div>
-  )
-}
+        </div>
+    );
+};
 
-export default Login
+export default Login;
