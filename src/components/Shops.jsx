@@ -10,13 +10,15 @@ const Shops = () => {
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        const result = await axios.get(backendURL + '/api/shops/getShopoverview')
+        // Remove double slash by using proper URL construction
+        const url = new URL('/api/shops/getShopoverview', backendURL).href;
+        const result = await axios.get(url);
         setShopOverview(result.data.result);
       } catch (error) {
-        console.log(error.message)
+        console.error('Error fetching shops:', error);
       }
     }
-    fetchShops()
+    fetchShops();
   }, [backendURL, setShopOverview])
 
   if (!Array.isArray(shopOverview) || shopOverview.length === 0) {

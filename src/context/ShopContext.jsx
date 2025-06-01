@@ -41,13 +41,13 @@ export const ShopProvider = ({ children }) => {
   };
 
   const getItemList = async () => {
-    try{
-      let result = await axios.get(backendURL+'/api/shops/getShopItems');
+    try {
+      // Remove double slash by using proper URL construction
+      const url = new URL('/api/shops/getShopItems', backendURL).href;
+      const result = await axios.get(url);
       setItemList(result.data.result);
-      // console.log(result.data);
-    }
-    catch(error){
-      console.log(error.message);
+    } catch (error) {
+      console.error('Error fetching items:', error);
     }
   }
 
