@@ -16,33 +16,40 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post(`${backendURL}/api/users/login`, formData, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      if (result.data.success) {
-        // Store token and user data
-        setToken(result.data.token);
-        setUser(result.data.user);
+        // Remove double slash by using URL constructor
+        const baseURL = import.meta.env.VITE_BACKEND_URL;
+        const url = new URL('/api/users/login', baseURL).href;
         
-        // Show success message
-        toast.success(`Welcome back ${result.data.user.name}!`);
-        
-        // Reset form
-        setFormData({
-          email: '',
-          password: ''
+        const response = await axios.post(url, {
+            email,
+            password
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
         });
-        
-        // Navigate to home
-        navigate('/');
-      }
+
+        if (response.data.success) {
+            // Handle successful login
+            setToken(response.data.token);
+            setUser(response.data.user);
+            
+            // Show success message
+            toast.success(`Welcome back ${response.data.user.name}!`);
+            
+            // Reset form
+            setFormData({
+              email: '',
+              password: ''
+            });
+            
+            // Navigate to home
+            navigate('/');
+        }
     } catch (error) {
-      console.error('Login error:', error);
-      const errorMessage = error.response?.data?.message || 'Login failed';
-      toast.error(errorMessage);
+        console.error('Login error:', error);
+        toast.error(error.response?.data?.message || 'Login failed');
     }
   }
 
