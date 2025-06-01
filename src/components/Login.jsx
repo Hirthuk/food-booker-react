@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
+import { ShopContext } from '../context/ShopContext';
 
 const Login = () => {
+    const { login } = useContext(ShopContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const backendURL = import.meta.env.VITE_BACKEND_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         
         try {
-            const url = new URL('/api/users/login', backendURL).href;
-            const response = await axios.post(url, { email, password }, {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            });
-
-            if (response.data.success) {
-                localStorage.setItem('token', response.data.token);
+            const response = await api.post('/api/users/login', { email, password });
+            if (response.data?.token) {
+                await login(response.data);
                 toast.success('Welcome back! 🎉');
                 navigate('/');
             }
         } catch (error) {
-            toast.error(error?.response?.data?.message || 'Login failed');
+            toast.error(error.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
         }

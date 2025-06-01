@@ -1,25 +1,29 @@
-import React, { useContext, useEffect } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import React, { useContext, useEffect } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../utils/api';
 
 const Profile = () => {
-  const { token, user, logout, fetchUserProfile } = useContext(ShopContext)
-  const navigate = useNavigate()
+  const { token, user, logout, fetchUserProfile, setUser } = useContext(ShopContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
     if (!storedToken) {
       navigate('/login');
       return;
     }
 
-    if (!user || Object.keys(user).length === 0) {
-      // If no user data in context but token exists, fetch profile
-      fetchUserProfile();
+    // Try to use stored user data first
+    if (!user && storedUser) {
+      setUser(storedUser);
     }
+
+    // Fetch fresh data from server
+    fetchUserProfile();
   }, []);
 
   const handleLogout = () => {
@@ -28,13 +32,20 @@ const Profile = () => {
     navigate('/login');
   };
 
-  if (!token) {
-    navigate('/login');
-    return null;
-  }
+  const handleUpdateProfile = async (updatedData) => {
+    try {
+      const response = await api.put('/api/users/profile', updatedData);
+      if (response.data?.user) {
+        setUser(response.data.user);
+        toast.success('Profile updated successfully');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    }
+  };
 
   // Show loading state while fetching user data
-  if (!user || Object.keys(user).length === 0) {
+  if (!user) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>

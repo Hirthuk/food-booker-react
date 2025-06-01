@@ -1,25 +1,24 @@
 import React, { useContext, useEffect } from 'react'
 import { ShopContext } from '../context/ShopContext'
-import axios from 'axios'
 import { NavLink } from 'react-router-dom'
+import api from '../utils/api'
+import { toast } from 'react-toastify'
 
 const Shops = () => {
   const { shopOverview, setShopOverview } = useContext(ShopContext)
-  const backendURL = import.meta.env.VITE_BACKEND_URL
 
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        // Remove double slash by using proper URL construction
-        const url = new URL('/api/shops/getShopoverview', backendURL).href;
-        const result = await axios.get(url);
-        setShopOverview(result.data.result);
+        const response = await api.get('/api/shops/getShopoverview');
+        setShopOverview(response.data.result);
       } catch (error) {
         console.error('Error fetching shops:', error);
+        toast.error('Failed to load shops');
       }
     }
     fetchShops();
-  }, [backendURL, setShopOverview])
+  }, [setShopOverview])
 
   if (!Array.isArray(shopOverview) || shopOverview.length === 0) {
     return (

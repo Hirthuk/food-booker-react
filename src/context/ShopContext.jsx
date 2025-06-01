@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import axios from 'axios'
+import { toast } from 'react-toastify';
+import api from '../utils/api';
 
 export const ShopContext = createContext();
 
@@ -34,31 +35,10 @@ export const ShopProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Create axios instance with base configuration
-  const api = axios.create({
-    baseURL: backendURL.replace(/\/+$/, ''), // Remove trailing slashes
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  // Add request interceptor to add token
-  api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
-
   // Fetch user profile data
   const fetchUserProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
       const response = await api.get('/api/users/profile');
-      
       if (response.data?.user) {
         setUser(response.data.user);
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -67,6 +47,7 @@ export const ShopProvider = ({ children }) => {
       console.error('Error fetching user data:', error);
       if (error.response?.status === 401) {
         logout();
+        toast.error('Session expired. Please login again.');
       }
     }
   };
@@ -94,12 +75,11 @@ export const ShopProvider = ({ children }) => {
 
   const getItemList = async () => {
     try {
-      // Remove double slash by using proper URL construction
-      const url = new URL('/api/shops/getShopItems', backendURL).href;
-      const result = await axios.get(url);
-      setItemList(result.data.result);
+      const response = await api.get('/api/shops/getShopItems');
+      setItemList(response.data.result);
     } catch (error) {
       console.error('Error fetching items:', error);
+      toast.error('Failed to fetch items');
     }
   }
 
