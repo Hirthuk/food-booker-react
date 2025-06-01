@@ -201,9 +201,14 @@ const MyCart = () => {
               <span className="text-lg sm:text-xl font-semibold">Total:</span>
               <span className="text-xl sm:text-2xl font-bold text-orange-500">₹{total}</span>
             </div>
-            <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base">
-              Proceed to Checkout
-            </button>
+            <div className="flex justify-center">
+              <button
+                className="w-full md:w-1/3 bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base flex flex-row text-center"
+                onClick={() => toast.error("Disabled in demo")}
+              >
+                Proceed to Checkout
+              </button>
+            </div>
           </div>
         </div>
       )}

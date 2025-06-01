@@ -1,7 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
-import api from '../utils/api';
-
+import axios from 'axios'
 export const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
@@ -35,37 +33,6 @@ export const ShopProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Fetch user profile data
-  const fetchUserProfile = async () => {
-    try {
-      const response = await api.get('/api/users/profile');
-      if (response.data?.user) {
-        setUser(response.data.user);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      if (error.response?.status === 401) {
-        logout();
-        toast.error('Session expired. Please login again.');
-      }
-    }
-  };
-
-  // Effect to fetch profile on mount and token change
-  useEffect(() => {
-    if (token) {
-      fetchUserProfile();
-    }
-  }, [token]);
-
-  const login = async (userData) => {
-    setToken(userData.token);
-    setUser(userData.user);
-    localStorage.setItem('token', userData.token);
-    localStorage.setItem('user', JSON.stringify(userData.user));
-  };
-
   const logout = () => {
     setToken(null);
     setUser({});
@@ -74,12 +41,13 @@ export const ShopProvider = ({ children }) => {
   };
 
   const getItemList = async () => {
-    try {
-      const response = await api.get('/api/shops/getShopItems');
-      setItemList(response.data.result);
-    } catch (error) {
-      console.error('Error fetching items:', error);
-      toast.error('Failed to fetch items');
+    try{
+      let result = await axios.get(backendURL+'/api/shops/getShopItems');
+      setItemList(result.data.result);
+      // console.log(result.data);
+    }
+    catch(error){
+      console.log(error.message);
     }
   }
 
@@ -97,9 +65,7 @@ export const ShopProvider = ({ children }) => {
     setToken,
     user,
     setUser,
-    login,
-    logout,
-    fetchUserProfile
+    logout
   };
 
   return (

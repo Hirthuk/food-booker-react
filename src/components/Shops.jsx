@@ -1,24 +1,23 @@
 import React, { useContext, useEffect } from 'react'
 import { ShopContext } from '../context/ShopContext'
+import axios from 'axios'
 import { NavLink } from 'react-router-dom'
-import api from '../utils/api'
-import { toast } from 'react-toastify'
 
 const Shops = () => {
   const { shopOverview, setShopOverview } = useContext(ShopContext)
+  const backendURL = import.meta.env.VITE_BACKEND_URL
 
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        const response = await api.get('/api/shops/getShopoverview');
-        setShopOverview(response.data.result);
+        const result = await axios.get(backendURL + '/api/shops/getShopoverview')
+        setShopOverview(result.data.result);
       } catch (error) {
-        console.error('Error fetching shops:', error);
-        toast.error('Failed to load shops');
+        console.log(error.message)
       }
     }
-    fetchShops();
-  }, [setShopOverview])
+    fetchShops()
+  }, [backendURL, setShopOverview])
 
   if (!Array.isArray(shopOverview) || shopOverview.length === 0) {
     return (

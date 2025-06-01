@@ -156,10 +156,10 @@ const Favourites = () => {
                 <p className="text-gray-500 text-sm mb-4">{item.description}</p>
                 <div className="flex justify-between items-center">
                   <Link
-                    to={`/menu/${item.item_id}`}
+                  onClick={() => (toast.error("Disabled in demo"))}
                     className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                   >
-                    View Details
+                    Buy
                   </Link>
                   <button
                     onClick={() => removeFavorite(item.item_id)}
